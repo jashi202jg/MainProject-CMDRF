@@ -1,29 +1,29 @@
 import React from 'react'
-import { Menu, Table } from 'semantic-ui-react'
+import { Table } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
-import { FaAngleRight } from 'react-icons/fa';
-import { FaAngleLeft } from 'react-icons/fa';
 import { Meteor } from 'meteor/meteor';
+
+import { Transactions } from '../../api/transactions.js';
 
 export default class TransactionHistory extends React.Component {
 
     constructor(props) {
 
         super(props)
-        this.transactions = [{ from: 'A', to: 'B', amount: '1', hash: 'C' }, 
-                            { from: 'A', to: 'B', amount: '1', hash: 'C' }]
+        //this.records = [{ from: 'A', to: 'B', amount: '1', hash: 'C' }, { from: 'A', to: 'B', amount: '1', hash: 'C' }]
+        this.records = Transactions.find({}).fetch()
     }
 
     renderRows = () => {
 
-        return this.transactions.map(transaction => {
+        return this.records.reverse().map(record => {
 
             return (
                 <Table.Row>
-                    <Table.Cell>{transaction.from}</Table.Cell>
-                    <Table.Cell>{transaction.to}</Table.Cell>
-                    <Table.Cell>{transaction.amount}</Table.Cell>
-                    <Table.Cell>{transaction.hash}</Table.Cell>
+                    <Table.Cell>{record.From}</Table.Cell>
+                    <Table.Cell>{record.To}</Table.Cell>
+                    <Table.Cell>{record.Amount}</Table.Cell>
+                    <Table.Cell>{record._id}</Table.Cell>
                 </Table.Row>
             )
         })

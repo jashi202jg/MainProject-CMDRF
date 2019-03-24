@@ -48,6 +48,11 @@ export default class UserAccount extends React.Component {
             alert("Aadhar number should be a 12 digit number")
             return
         }
+        if (aadharNumber == "123456123456") {
+            alert("No user found in this Aadhar Number")
+            return
+        }
+
 
         this.amount.value = ""
         this.aadharNumber.value = ""
@@ -57,6 +62,11 @@ export default class UserAccount extends React.Component {
             return elem.username;
           });
         var u = res[0] 
+
+        if(u == undefined){
+            alert("No user found in this Aadhar Number")
+            return 
+        }
 
         Transactions.insert({ "From":"CMDRF", "To":u, "Amount":amount, "Hash":"G" })
 
