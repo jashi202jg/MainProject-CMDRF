@@ -51,7 +51,9 @@ export default class UserAccount extends React.Component {
         this.amount.value = ""
         this.aadharNumber.value = ""
 
-        alert("success")
+        //alert("success")
+        Hashcademy.methods.setCertificate("CMDRF", aadharNumber, amount).send({ from: web3.eth.defaultAccount }).on('receipt', function (receipt) {
+        });
     }
 
     donate = (e) => {
@@ -60,10 +62,14 @@ export default class UserAccount extends React.Component {
         let amount = this.amount.value.trim()
         this.amount.value = ""
 
-        alert("success")
+        //alert("success")
+        Hashcademy.methods.setCertificate(Meteor.user().username, "CMDRF", amount).send({ from: web3.eth.defaultAccount }).on('receipt', function (receipt) {
+        });
     }
 
     render() {
+        //console.log(Web3)
+     
         if (this.state.username == 'Admin') {
             return (
                 <div className="card-center">

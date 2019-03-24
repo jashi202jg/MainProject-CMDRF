@@ -7,59 +7,47 @@ import { Meteor } from 'meteor/meteor';
 
 export default class TransactionHistory extends React.Component {
 
+    constructor(props) {
+
+        super(props)
+        this.transactions = [{ from: 'A', to: 'B', amount: '1', hash: 'C' }, 
+                            { from: 'A', to: 'B', amount: '1', hash: 'C' }]
+    }
+
+    renderRows = () => {
+
+        return this.transactions.map(transaction => {
+
+            return (
+                <Table.Row>
+                    <Table.Cell>{transaction.from}</Table.Cell>
+                    <Table.Cell>{transaction.to}</Table.Cell>
+                    <Table.Cell>{transaction.amount}</Table.Cell>
+                    <Table.Cell>{transaction.hash}</Table.Cell>
+                </Table.Row>
+            )
+        })
+    }
+
     render() {
+
         return (
             <div className="table">
-            <span className="transaction">Transaction History</span><br />
+                <span className="transaction">Transaction History</span><br />
                 <Table celled>
                     <Table.Header>
                         <Table.Row>
-                            <Table.HeaderCell>Hash</Table.HeaderCell>
                             <Table.HeaderCell>From</Table.HeaderCell>
                             <Table.HeaderCell>To</Table.HeaderCell>
                             <Table.HeaderCell>Amount</Table.HeaderCell>
+                            <Table.HeaderCell>Hash</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
 
                     <Table.Body>
-                        <Table.Row>
-                            <Table.Cell>Cell</Table.Cell>
-                            <Table.Cell>Cell</Table.Cell>
-                            <Table.Cell>Cell</Table.Cell>
-                            <Table.Cell>Cell</Table.Cell>
-                        </Table.Row>
-                        <Table.Row>
-                            <Table.Cell>Cell</Table.Cell>
-                            <Table.Cell>Cell</Table.Cell>
-                            <Table.Cell>Cell</Table.Cell>
-                            <Table.Cell>Cell</Table.Cell>
-                        </Table.Row>
-                        <Table.Row>
-                            <Table.Cell>Cell</Table.Cell>
-                            <Table.Cell>Cell</Table.Cell>
-                            <Table.Cell>Cell</Table.Cell>
-                            <Table.Cell>Cell</Table.Cell>
-                        </Table.Row>
+                        {this.renderRows()}
                     </Table.Body>
 
-                    <Table.Footer>
-                        <Table.Row>
-                            <Table.HeaderCell colSpan='4'>
-                                <Menu floated='right' pagination>
-                                    <Menu.Item as='a' icon>
-                                        <FaAngleLeft/>
-                                    </Menu.Item>
-                                    <Menu.Item as='a'>1</Menu.Item>
-                                    <Menu.Item as='a'>2</Menu.Item>
-                                    <Menu.Item as='a'>3</Menu.Item>
-                                    <Menu.Item as='a'>4</Menu.Item>
-                                    <Menu.Item as='a' icon>
-                                        <FaAngleRight/>
-                                    </Menu.Item>
-                                </Menu>
-                            </Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Footer>
                 </Table>
             </div>
         )

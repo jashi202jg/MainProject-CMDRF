@@ -1,7 +1,25 @@
 <head>
   <title>CMDRF</title>
+  <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js" integrity="sha256-nWBTbvxhJgjslRyuAKJHK+XcZPlCnmIAAMixz6EefVk="
+    crossorigin="anonymous"></script>
 </head>
 
 <body>
+  <script>
+    if (typeof web3 !== 'undefined') {
+      web3 = new Web3(web3.currentProvider);
+    } else {
+      // Set the provider you want from Web3.providers
+      web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+    }
+    var abi = [{ "constant": true, "inputs": [], "name": "name", "outputs": [{ "name": "", "type": "string" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "name1", "outputs": [{ "name": "", "type": "string" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "level", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "getCertificate", "outputs": [{ "name": "", "type": "string" }, { "name": "", "type": "string" }, { "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_name", "type": "string" }, { "name": "_name1", "type": "string" }, { "name": "_level", "type": "uint256" }], "name": "setCertificate", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "anonymous": false, "inputs": [{ "indexed": false, "name": "name", "type": "string" }, { "indexed": false, "name": "name1", "type": "string" }, { "indexed": false, "name": "level", "type": "uint256" }], "name": "Certificate", "type": "event" }];
+    var contractAddress = "0x472d44b8abd919bef682109855d4141cd292c365";
+    async function init() {
+      Hashcademy = await new web3.eth.Contract(abi, contractAddress);
+      var accounts = await web3.eth.getAccounts();
+      web3.eth.defaultAccount = accounts[0];
+    }
+    init();  
+  </script>
   <div id="react-target"></div>
 </body>
