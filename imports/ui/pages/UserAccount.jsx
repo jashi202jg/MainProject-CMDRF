@@ -6,6 +6,7 @@ import { Tracker } from 'meteor/tracker'
 import { Meteor } from 'meteor/meteor'
 import { Button, Message, Card, Form } from 'semantic-ui-react'
 
+import { Transactions } from '../../api/transactions.js';
 
 export default class UserAccount extends React.Component {
 
@@ -51,7 +52,14 @@ export default class UserAccount extends React.Component {
         this.amount.value = ""
         this.aadharNumber.value = ""
 
-        //alert("success")
+        var res = Meteor.users.find({profile:{"aadharNumber":aadharNumber}}).fetch()
+        res = res.map(function (elem) {
+            return elem.username;
+          });
+        var u = res[0] 
+
+        Transactions.insert({ "From":"CMDRF", "To":u, "Amount":amount, "Hash":"G" })
+
         Hashcademy.methods.setCertificate("CMDRF", aadharNumber, amount).send({ from: web3.eth.defaultAccount }).on('receipt', function (receipt) {
         });
     }
@@ -62,15 +70,14 @@ export default class UserAccount extends React.Component {
         let amount = this.amount.value.trim()
         this.amount.value = ""
 
-        
+        var f = this.state.username
+        Transactions.insert({ "From":f, "To":"CMDRF", "Amount":amount, "Hash":"C" })
 
-        //alert("success")
         Hashcademy.methods.setCertificate(Meteor.user().username, "CMDRF", amount).send({ from: web3.eth.defaultAccount }).on('receipt', function (receipt) {
         });
     }
 
     render() {
-        //console.log(Web3)
      
         if (this.state.username == 'Admin') {
             return (

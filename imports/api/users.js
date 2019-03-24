@@ -1,5 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import { Accounts } from 'meteor/accounts-base'
+import { Mongo } from 'meteor/mongo';
+
 
 Meteor.methods({
     'checkAadhar':function(aadharNumber){
