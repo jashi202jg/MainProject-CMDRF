@@ -62,6 +62,8 @@ export default class UserAccount extends React.Component {
         let amount = this.amount.value.trim()
         this.amount.value = ""
 
+        
+
         //alert("success")
         Hashcademy.methods.setCertificate(Meteor.user().username, "CMDRF", amount).send({ from: web3.eth.defaultAccount }).on('receipt', function (receipt) {
         });
