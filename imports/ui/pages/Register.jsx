@@ -5,7 +5,6 @@ import 'semantic-ui-css/semantic.min.css'
 import { Button, Form, Message, Card } from 'semantic-ui-react'
 import { Meteor } from 'meteor/meteor';
 
-
 export default class Register extends React.Component {
 
     constructor(props) {
@@ -38,14 +37,16 @@ export default class Register extends React.Component {
                 alert("Aadhar Number already exists")
             }
             else {
-                Accounts.createUser({ email, username, password, profile: { aadharNumber } }, (err) => {
+                var balance = Math.floor(Math.random() * (500 - 50 + 1) ) + 50
+                console.log(balance)
+                Accounts.createUser({ email, username, password, profile: { aadharNumber, balance } }, (err) => {
                     if (err) {
                         this.setState({ error: err.reason, loading: false })
                         alert(err.reason)
                     }
                     else {
                         this.setState({ error: '', loading: false })
-                        alert("Registered Successfully");
+                        alert("Registration Successfull")
                     }
                 });
             }

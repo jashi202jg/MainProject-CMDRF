@@ -15,7 +15,9 @@ export default class UserAccount extends React.Component {
         this.state = {
             error: '',
             loading: false,
-            username: ''
+            username: '',
+            balance: '',
+            id: ''
         }
     }
 
@@ -24,7 +26,9 @@ export default class UserAccount extends React.Component {
 
             if (Meteor.user())
                 this.setState({
-                    username: Meteor.user().username
+                    username: Meteor.user().username,
+                    balance: Meteor.user().profile.balance,
+                    id: Meteor.user()._id
                 })
         })
     }
@@ -80,6 +84,21 @@ export default class UserAccount extends React.Component {
         let amount = this.amount.value.trim()
         this.amount.value = ""
 
+        if(amount > this.state.balance){
+            alert("Insufficient fund")
+            return
+        }
+
+        var donor_b = this.state.balance - amount
+        Meteor.users.update({_id:this.state.id},{$set:{profile:{"balance":donor_b}}})
+
+        //P9FcSToZh6H8BHtxE
+        var res = Meteor.users.find({"profile.aadharNumber":{"$eq":"123456123456"}}).fetch()
+        var admin_id = res[0]._id
+        var admin_b = parseInt(res[0].profile.balance) + parseInt(amount)
+
+        Meteor.users.update({_id:admin_id},{$set:{profile:{"balance":admin_b}}})  
+
         var f = this.state.username
         Transactions.insert({ "From":f, "To":"CMDRF", "Amount":amount, "Hash":"C" })
 
@@ -98,6 +117,7 @@ export default class UserAccount extends React.Component {
                                 <Card.Header><span className="user">{this.state.username}</span></Card.Header>
                                 <br />
                                 <Card.Description>
+                                    <h4 style={{textAlign:"center"}}>Balance: {this.state.balance}</h4>
                                     <Form onSubmit={this.distribute}>
                                         <Form.Field>
                                             <label>To</label>
@@ -132,6 +152,7 @@ export default class UserAccount extends React.Component {
                                 <Card.Header><span className="user">{this.state.username}</span></Card.Header>
                                 <br />
                                 <Card.Description>
+                                    <h4 style={{textAlign:"center"}}>Balance: {this.state.balance}</h4>
                                     <Form onSubmit={this.donate}>
                                         <Form.Field>
                                             <label>To</label>

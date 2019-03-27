@@ -4,3 +4,4 @@ import '../imports/api/transactions'
 Meteor.startup(() => {
 
 });
+
