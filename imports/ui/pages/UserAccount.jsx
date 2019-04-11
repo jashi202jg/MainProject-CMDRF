@@ -4,9 +4,10 @@ import { Link } from 'react-router-dom'
 import { Accounts } from 'meteor/accounts-base'
 import { Tracker } from 'meteor/tracker'
 import { Meteor } from 'meteor/meteor'
-import { Button, Message, Card, Form } from 'semantic-ui-react'
+import { Button, Message, Card, Form, Modal } from 'semantic-ui-react'
 
 import { Transactions } from '../../api/transactions.js';
+
 
 export default class UserAccount extends React.Component {
 
@@ -44,6 +45,31 @@ export default class UserAccount extends React.Component {
         Accounts.logout()
     }
 
+    getAccountTransactions = (startBlockNumber, endBlockNumber, callback) => {
+
+        let flag = 0
+
+        for (var i = endBlockNumber; i >= startBlockNumber; i--) {
+
+
+            web3.eth.getBlock(i, true).then(a => {
+
+                if (flag === 1)
+                    return
+
+                var t = a.transactions
+                for (var i = 0; i < t.length; i++) {
+                    if (t[i].to == "0x472d44B8ABD919Bef682109855d4141CD292c365") {
+                        //console.log(t[i].hash)
+                        callback(t[i].hash)
+                        flag = 1
+                        return
+                    }
+                }
+            });
+        }
+    }
+
     distribute = (e) => {
         e.preventDefault()
 
@@ -67,6 +93,11 @@ export default class UserAccount extends React.Component {
             return
         }
 
+        if (amount === "0") {
+            alert("please enter a valid amount")
+            return
+        }
+
         var res = Meteor.users.find({ "profile.aadharNumber": { "$eq": aadharNumber } }).fetch()
         res = res.map(function (elem) {
             return elem.username;
@@ -78,23 +109,38 @@ export default class UserAccount extends React.Component {
             return
         }
 
-        var admin_b = this.state.balance - amount
-        Meteor.users.update({ _id: this.state.id }, { $set: { profile: { "aadharNumber": this.state.aadhar, "balance": admin_b } } })
-
-        var res = Meteor.users.find({ "profile.aadharNumber": { "$eq": aadharNumber } }).fetch()
-        var rec_id = res[0]._id
-        var rec_b = parseInt(res[0].profile.balance) + parseInt(amount)
-
-        Meteor.users.update({ _id: rec_id }, { $set: { profile: { "aadharNumber": aadharNumber, "balance": rec_b } } })
-
-        Transactions.insert({ "From": "CMDRF", "To": u, "Amount": amount, "Hash": "G" })
-
         Hashcademy.methods.setCertificate("CMDRF", aadharNumber, amount).send({ from: web3.eth.defaultAccount }).on('receipt', function (receipt) {
         });
+
+        var delayInMilliseconds = 50000;
+
+        web3.eth.getBlockNumber().then(a => {
+            var latestBlock = a
+            console.log(latestBlock)
+            setTimeout(() => {
+                this.getAccountTransactions(latestBlock, latestBlock + 10, (t) => {
+
+                    var admin_b = this.state.balance - amount
+                    Meteor.users.update({ _id: this.state.id }, { $set: { profile: { "aadharNumber": this.state.aadhar, "balance": admin_b } } })
+
+                    var res = Meteor.users.find({ "profile.aadharNumber": { "$eq": aadharNumber } }).fetch()
+                    var rec_id = res[0]._id
+                    var rec_b = parseInt(res[0].profile.balance) + parseInt(amount)
+
+                    Meteor.users.update({ _id: rec_id }, { $set: { profile: { "aadharNumber": aadharNumber, "balance": rec_b } } })
+
+                    console.log(t)
+                    Transactions.insert({ "From": "CMDRF", "To": u, "Amount": amount, "Hash": t })
+
+                })
+            }, delayInMilliseconds);
+        })
+
     }
 
     donate = (e) => {
         e.preventDefault()
+
 
         let amount = this.amount.value.trim()
         this.amount.value = ""
@@ -104,21 +150,41 @@ export default class UserAccount extends React.Component {
             return
         }
 
-        var donor_b = this.state.balance - amount
-        Meteor.users.update({ _id: this.state.id }, { $set: { profile: { "aadharNumber": this.state.aadhar, "balance": donor_b } } })
+        if (amount === "0") {
+            alert("please enter a valid amount")
+            return
+        }
 
-        //P9FcSToZh6H8BHtxE
-        var res = Meteor.users.find({ "profile.aadharNumber": { "$eq": "123456123456" } }).fetch()
-        var admin_id = res[0]._id
-        var admin_b = parseInt(res[0].profile.balance) + parseInt(amount)
-
-        Meteor.users.update({ _id: admin_id }, { $set: { profile: { "aadharNumber": "123456123456", "balance": admin_b } } })
-
-        var f = this.state.username
-        Transactions.insert({ "From": f, "To": "CMDRF", "Amount": amount, "Hash": "C" })
 
         Hashcademy.methods.setCertificate(Meteor.user().username, "CMDRF", amount).send({ from: web3.eth.defaultAccount }).on('receipt', function (receipt) {
         });
+
+
+        var delayInMilliseconds = 50000;
+
+        web3.eth.getBlockNumber().then(a => {
+            var latestBlock = a
+            console.log(latestBlock)
+            setTimeout(() => {
+                this.getAccountTransactions(latestBlock, latestBlock + 10, (t) => {
+
+                    var donor_b = this.state.balance - amount
+                    Meteor.users.update({ _id: this.state.id }, { $set: { profile: { "aadharNumber": this.state.aadhar, "balance": donor_b } } })
+
+                    var res = Meteor.users.find({ "profile.aadharNumber": { "$eq": "123456123456" } }).fetch()
+                    var admin_id = res[0]._id
+                    var admin_b = parseInt(res[0].profile.balance) + parseInt(amount)
+
+                    Meteor.users.update({ _id: admin_id }, { $set: { profile: { "aadharNumber": "123456123456", "balance": admin_b } } })
+
+                    console.log(t)
+                    var f = this.state.username
+                    Transactions.insert({ "From": f, "To": "CMDRF", "Amount": amount, "Hash": t })
+
+                })
+            }, delayInMilliseconds);
+        })
+
     }
 
     render() {

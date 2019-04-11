@@ -1,11 +1,15 @@
 <head>
   <title>CMDRF</title>
+  <link rel="manifest" href="../public/manifest/manifest.json">
+  <link rel="shortcut icon" href="../public/manifest/images/icons/favicon.png">
+  
   <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js" integrity="sha256-nWBTbvxhJgjslRyuAKJHK+XcZPlCnmIAAMixz6EefVk="
     crossorigin="anonymous"></script>
 </head>
 
 <body>
   <script>
+
     if (typeof web3 !== 'undefined') {
       web3 = new Web3(web3.currentProvider);
     } else {
@@ -17,9 +21,13 @@
     async function init() {
       Hashcademy = await new web3.eth.Contract(abi, contractAddress);
       var accounts = await web3.eth.getAccounts();
+      console.log(accounts)
       web3.eth.defaultAccount = accounts[0];
+      //web3.eth.defaultAccount = '0xACcbeD9A31D64C21Fb162a1E0d37D3b00B5dA5a3';
+      //console.log(accounts[0])
     }
-    init();  
+    init();
+
   </script>
   <div id="react-target"></div>
 </body>

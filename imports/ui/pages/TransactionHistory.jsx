@@ -10,7 +10,6 @@ export default class TransactionHistory extends React.Component {
     constructor(props) {
 
         super(props)
-        //this.records = [{ from: 'A', to: 'B', amount: '1', hash: 'C' }, { from: 'A', to: 'B', amount: '1', hash: 'C' }]
         this.records = Transactions.find({}).fetch()
     }
 
@@ -23,7 +22,7 @@ export default class TransactionHistory extends React.Component {
                     <Table.Cell>{record.From}</Table.Cell>
                     <Table.Cell>{record.To}</Table.Cell>
                     <Table.Cell>{record.Amount}</Table.Cell>
-                    <Table.Cell>{record._id}</Table.Cell>
+                    <a href={`https://ropsten.etherscan.io/tx/${record.Hash}`} target="_blank"><Table.Cell>{record.Hash}</Table.Cell></a>
                 </Table.Row>
             )
         })

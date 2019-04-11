@@ -1,0 +1,18 @@
+{
+    "name": "CMDRF",
+    "short_name": "CMDRF",
+    "theme_color": "#000000",
+    "background_color": "#ffffff",
+    "display": "standalone",
+    "description":"Accelerated relief fund disbursement and bringing transparency to CMDRF using Blockchain.",
+    "Scope": "/",
+    "start_url": "/",
+    "icons": [
+      {
+        "src": "images/icons/favicon.png",
+        "sizes": "16x16",
+        "type": "image/png"
+      }
+    ],
+    "splash_pages": null
+  }
