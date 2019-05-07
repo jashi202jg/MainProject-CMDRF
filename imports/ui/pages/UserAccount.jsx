@@ -122,12 +122,20 @@ export default class UserAccount extends React.Component {
 
                     var admin_b = this.state.balance - amount
                     Meteor.users.update({ _id: this.state.id }, { $set: { profile: { "aadharNumber": this.state.aadhar, "balance": admin_b } } })
+                    // Meteor.call('users.balanceUpdate', this.state.id, this.state.aadhar, admin_b, (err) => {
+                    //     //alert("Send!")
+                    // })
+
 
                     var res = Meteor.users.find({ "profile.aadharNumber": { "$eq": aadharNumber } }).fetch()
                     var rec_id = res[0]._id
                     var rec_b = parseInt(res[0].profile.balance) + parseInt(amount)
 
                     Meteor.users.update({ _id: rec_id }, { $set: { profile: { "aadharNumber": aadharNumber, "balance": rec_b } } })
+                    // Meteor.call('users.balanceUpdate', rec_id, aadharNumber, rec_b, (err) => {
+                    //     alert("Send!")
+                    // })
+
 
                     console.log(t)
                     Transactions.insert({ "From": "CMDRF", "To": u, "Amount": amount, "Hash": t })
@@ -170,12 +178,18 @@ export default class UserAccount extends React.Component {
 
                     var donor_b = this.state.balance - amount
                     Meteor.users.update({ _id: this.state.id }, { $set: { profile: { "aadharNumber": this.state.aadhar, "balance": donor_b } } })
+                    // Meteor.call('users.balanceUpdate', this.state.id, state, donor_b, (err) => {
+                    //     //alert("Send!")
+                    // })
 
                     var res = Meteor.users.find({ "profile.aadharNumber": { "$eq": "123456123456" } }).fetch()
                     var admin_id = res[0]._id
                     var admin_b = parseInt(res[0].profile.balance) + parseInt(amount)
 
                     Meteor.users.update({ _id: admin_id }, { $set: { profile: { "aadharNumber": "123456123456", "balance": admin_b } } })
+                    // Meteor.call('users.balanceUpdate', admin_id, "123456123456", admin_b, (err) => {
+                    //     alert("Send!")
+                    // })
 
                     console.log(t)
                     var f = this.state.username

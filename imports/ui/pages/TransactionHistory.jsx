@@ -22,7 +22,7 @@ export default class TransactionHistory extends React.Component {
                     <Table.Cell>{record.From}</Table.Cell>
                     <Table.Cell>{record.To}</Table.Cell>
                     <Table.Cell>{record.Amount}</Table.Cell>
-                    <a href={`https://ropsten.etherscan.io/tx/${record.Hash}`} target="_blank"><Table.Cell>{record.Hash}</Table.Cell></a>
+                    <Table.Cell><a href={`https://ropsten.etherscan.io/tx/${record.Hash}`} target="_blank">{record.Hash}</a></Table.Cell>
                 </Table.Row>
             )
         })
